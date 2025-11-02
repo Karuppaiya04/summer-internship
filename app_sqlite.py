@@ -8,7 +8,7 @@ import hashlib
 import secrets
 
 app = Flask(__name__)
-app.secret_key = secrets.token_hex(32)  # Secure secret key for sessions
+app.secret_key = os.environ.get('SECRET_KEY', secrets.token_hex(32))  # Use environment variable or generate secure key
 
 # Database file path
 DATABASE = 'birthday_reminder.db'
@@ -486,8 +486,10 @@ def send_whatsapp_bulk():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# Initialize database on module load (for production)
+init_db()
+
 if __name__ == '__main__':
-    init_db()  # Initialize database on startup
     print("\n" + "="*50)
     print("🎉 Birthday Reminder App Starting...")
     print("="*50)
