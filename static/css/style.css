@@ -1,0 +1,20 @@
+/* Birthday Reminder - Professional Clean Design */
+/* All main styles are embedded in index.html for better performance */
+/* This file is kept for future custom styles or overrides */
+
+/* Additional responsive adjustments if needed */
+@media (max-width: 576px) {
+  .stat-card-value {
+    font-size: 20px !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .navbar,
+  .action-bar,
+  .birthday-actions,
+  .toast-container {
+    display: none !important;
+  }
+}

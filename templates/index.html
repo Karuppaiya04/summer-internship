@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Birthday Reminder</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        /* Light Mode Colors */
+        --bg-gradient-start: #667eea;
+        --bg-gradient-end: #764ba2;
+        --navbar-bg: rgba(255, 255, 255, 0.95);
+        --text-primary: #2c3e50;
+        --text-secondary: #7f8c8d;
+        --text-light: rgba(255, 255, 255, 0.9);
+        --card-bg: rgba(255, 255, 255, 0.95);
+        --card-hover: #f8fafc;
+        --border-color: #f0f3f7;
+        --shadow: rgba(0, 0, 0, 0.1);
+        --shadow-hover: rgba(0, 0, 0, 0.15);
+        --input-border: #dfe6e9;
+        --particle-color: rgba(255, 255, 255, 0.5);
+      }
+
+      body.dark-mode {
+        /* Dark Mode Colors */
+        --bg-gradient-start: #1a1a2e;
+        --bg-gradient-end: #16213e;
+        --navbar-bg: rgba(26, 26, 46, 0.95);
+        --text-primary: #e0e0e0;
+        --text-secondary: #a0a0a0;
+        --text-light: rgba(255, 255, 255, 0.9);
+        --card-bg: rgba(30, 30, 50, 0.95);
+        --card-hover: rgba(40, 40, 60, 0.95);
+        --border-color: rgba(255, 255, 255, 0.1);
+        --shadow: rgba(0, 0, 0, 0.3);
+        --shadow-hover: rgba(0, 0, 0, 0.5);
+        --input-border: rgba(255, 255, 255, 0.2);
+        --particle-color: rgba(102, 126, 234, 0.5);
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--bg-gradient-start) 0%,
+          var(--bg-gradient-end) 100%
+        );
+        min-height: 100vh;
+        color: var(--text-primary);
+        position: relative;
+        overflow-x: hidden;
+        transition: background 0.5s ease, color 0.5s ease;
+      }
+
+      /* Animated Background */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          var(--bg-gradient-start) 0%,
+          var(--bg-gradient-end) 100%
+        );
+        z-index: -1;
+        animation: gradientShift 15s ease infinite;
+        transition: background 0.5s ease;
+      }
+
+      @keyframes gradientShift {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.8;
+        }
+      }
+
+      /* Floating Particles */
+      .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+
+      .particle {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: var(--particle-color);
+        border-radius: 50%;
+        animation: floatParticle 15s infinite ease-in-out;
+        transition: background 0.5s ease;
+      }
+
+      .particle:nth-child(1) {
+        left: 10%;
+        animation-delay: 0s;
+        animation-duration: 12s;
+      }
+
+      .particle:nth-child(2) {
+        left: 20%;
+        animation-delay: 2s;
+        animation-duration: 14s;
+      }
+
+      .particle:nth-child(3) {
+        left: 30%;
+        animation-delay: 4s;
+        animation-duration: 16s;
+        width: 15px;
+        height: 15px;
+      }
+
+      .particle:nth-child(4) {
+        left: 40%;
+        animation-delay: 1s;
+        animation-duration: 13s;
+      }
+
+      .particle:nth-child(5) {
+        left: 50%;
+        animation-delay: 3s;
+        animation-duration: 15s;
+        width: 12px;
+        height: 12px;
+      }
+
+      .particle:nth-child(6) {
+        left: 60%;
+        animation-delay: 5s;
+        animation-duration: 11s;
+      }
+
+      .particle:nth-child(7) {
+        left: 70%;
+        animation-delay: 2.5s;
+        animation-duration: 14s;
+        width: 8px;
+        height: 8px;
+      }
+
+      .particle:nth-child(8) {
+        left: 80%;
+        animation-delay: 4.5s;
+        animation-duration: 16s;
+      }
+
+      .particle:nth-child(9) {
+        left: 90%;
+        animation-delay: 1.5s;
+        animation-duration: 12s;
+        width: 14px;
+        height: 14px;
+      }
+
+      @keyframes floatParticle {
+        0% {
+          transform: translateY(100vh) translateX(0) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100vh) translateX(100px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Navbar */
+      .navbar {
+        background: var(--navbar-bg);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 12px var(--shadow);
+        padding: 12px 0;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 10;
+      }
+
+      .navbar:hover {
+        box-shadow: 0 6px 16px var(--shadow-hover);
+      }
+
+      .navbar-brand {
+        font-size: 22px;
+        font-weight: 600;
+        color: var(--text-primary) !important;
+        transition: transform 0.3s ease;
+      }
+
+      .navbar-brand:hover {
+        transform: scale(1.05);
+      }
+
+      .navbar-brand i {
+        color: #3498db;
+        font-size: 24px;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      .nav-link {
+        color: var(--text-secondary) !important;
+        font-size: 15px;
+        padding: 8px 16px !important;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-link::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(52, 152, 219, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .nav-link:hover::before {
+        left: 100%;
+      }
+
+      .nav-link:hover {
+        background: var(--card-hover);
+        color: var(--text-primary) !important;
+        transform: translateY(-2px);
+      }
+
+      .nav-link.active {
+        background: #e8f4f8;
+        color: #3498db !important;
+        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+      }
+
+      /* Theme Toggle Button */
+      .theme-toggle {
+        background: transparent;
+        border: 2px solid var(--text-secondary);
+        color: var(--text-primary);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-left: 12px;
+      }
+
+      .theme-toggle:hover {
+        transform: rotate(180deg) scale(1.1);
+        border-color: #3498db;
+        color: #3498db;
+        background: var(--card-bg);
+      }
+
+      .theme-toggle i {
+        font-size: 18px;
+      }
+
+      /* Main Container */
+      .main-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px 16px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Page Header */
+      .page-header {
+        margin-bottom: 32px;
+        animation: fadeIn 0.8s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--text-light);
+        margin-bottom: 8px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .page-header p {
+        font-size: 15px;
+        color: var(--text-light);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Stats Cards */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+
+      .stat-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 12px var(--shadow);
+        transition: all 0.3s ease;
+        animation: fadeInUp 0.6s ease forwards;
+        opacity: 0;
+      }
+
+      .stat-card:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .stat-card:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .stat-card:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .stat-card:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px var(--shadow-hover);
+      }
+
+      .stat-card-title {
+        font-size: 13px;
+        color: var(--text-secondary);
+        font-weight: 500;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .stat-card-value {
+        font-size: 32px;
+        font-weight: 600;
+        color: var(--text-primary);
+        transition: transform 0.3s ease;
+      }
+
+      .stat-card:hover .stat-card-value {
+        transform: scale(1.1);
+      }
+
+      .stat-card-icon {
+        font-size: 24px;
+        float: right;
+        color: #3498db;
+        animation: bounce 2s ease-in-out infinite;
+      }
+
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+      }
+
+      /* Action Buttons */
+      .action-bar {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+      }
+
+      .btn-custom {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-custom::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+      }
+
+      .btn-custom:hover::before {
+        width: 300px;
+        height: 300px;
+      }
+
+      .btn-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-custom:active {
+        transform: translateY(0);
+      }
+
+      .btn-primary-custom {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+      }
+
+      .btn-primary-custom:hover {
+        background: linear-gradient(135deg, #2980b9 0%, #21618c 100%);
+        box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+      }
+
+      .btn-success-custom {
+        background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+      }
+
+      .btn-success-custom:hover {
+        background: linear-gradient(135deg, #229954 0%, #1e8449 100%);
+        box-shadow: 0 6px 16px rgba(39, 174, 96, 0.4);
+      }
+
+      .btn-outline-custom {
+        background: rgba(255, 255, 255, 0.95);
+        color: #5a6c7d;
+        border: 1px solid #dfe6e9;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-outline-custom:hover {
+        background: white;
+        border-color: #3498db;
+        color: #3498db;
+      }
+
+      /* Search and Filter */
+      .search-filter-bar {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 12px var(--shadow);
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+        animation: slideInLeft 0.5s ease;
+      }
+
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .search-input {
+        flex: 1;
+        min-width: 200px;
+        padding: 10px 16px;
+        border: 1px solid var(--input-border);
+        border-radius: 8px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        background: var(--card-bg);
+        color: var(--text-primary);
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .view-toggle {
+        display: flex;
+        gap: 4px;
+        background: #f8f9fa;
+        padding: 4px;
+        border-radius: 8px;
+      }
+
+      .view-btn {
+        padding: 8px 12px;
+        background: transparent;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+      }
+
+      .view-btn:hover {
+        background: rgba(52, 152, 219, 0.1);
+        color: #3498db;
+      }
+
+      .view-btn.active {
+        background: white;
+        color: #3498db;
+        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+        transform: scale(1.05);
+      }
+
+      /* Birthday Cards */
+      .birthdays-container {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 12px var(--shadow);
+        animation: fadeInUp 0.6s ease;
+      }
+
+      .birthday-card {
+        border-bottom: 1px solid var(--border-color);
+        padding: 16px 0;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 16px;
+        align-items: center;
+        transition: all 0.3s ease;
+        animation: slideInRight 0.5s ease forwards;
+        opacity: 0;
+      }
+
+      .birthday-card:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .birthday-card:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .birthday-card:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .birthday-card:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+      .birthday-card:nth-child(5) {
+        animation-delay: 0.5s;
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .birthday-card:hover {
+        background: var(--card-hover);
+        padding-left: 16px;
+        padding-right: 16px;
+        margin-left: -16px;
+        margin-right: -16px;
+        border-radius: 8px;
+      }
+
+      .birthday-card:last-child {
+        border-bottom: none;
+      }
+
+      .birthday-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #e8f4f8 0%, #d4ebf7 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: #3498db;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+      }
+
+      .birthday-card:hover .birthday-avatar {
+        transform: rotate(360deg) scale(1.1);
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+      }
+
+      .birthday-info h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+      }
+
+      .birthday-details {
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+
+      .birthday-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        margin-right: 8px;
+      }
+
+      .badge-today {
+        background: linear-gradient(135deg, #fee 0%, #fdd 100%);
+        color: #e74c3c;
+        animation: glow 2s ease-in-out infinite;
+      }
+
+      @keyframes glow {
+        0%,
+        100% {
+          box-shadow: 0 0 5px rgba(231, 76, 60, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 15px rgba(231, 76, 60, 0.6);
+        }
+      }
+
+      .badge-soon {
+        background: linear-gradient(135deg, #e8f4f8 0%, #d4ebf7 100%);
+        color: #3498db;
+      }
+
+      .badge-upcoming {
+        background: #f0f3f7;
+        color: #7f8c8d;
+      }
+
+      .birthday-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .action-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: none;
+        background: #f8f9fa;
+        color: #5a6c7d;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .action-btn::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        transform: translate(-50%, -50%);
+        transition: width 0.4s, height 0.4s;
+      }
+
+      .action-btn:hover::after {
+        width: 100px;
+        height: 100px;
+      }
+
+      .action-btn:hover {
+        transform: scale(1.1) rotate(5deg);
+      }
+
+      .action-btn:hover {
+        background: #e8f4f8;
+        color: #3498db;
+      }
+
+      .action-btn.whatsapp {
+        background: linear-gradient(135deg, #e8f8f2 0%, #d4f1e3 100%);
+        color: #27ae60;
+      }
+
+      .action-btn.whatsapp:hover {
+        background: linear-gradient(135deg, #d4f1e3 0%, #c0e8d4 100%);
+        transform: scale(1.15) rotate(-5deg);
+      }
+
+      .action-btn.delete {
+        background: linear-gradient(135deg, #fee 0%, #fdd 100%);
+        color: #e74c3c;
+      }
+
+      .action-btn.delete:hover {
+        background: linear-gradient(135deg, #fdd 0%, #fcc 100%);
+        transform: scale(1.15) rotate(-5deg);
+      }
+
+      /* Modal Styling */
+      .modal-content {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 10px 40px var(--shadow);
+        animation: modalSlideUp 0.3s ease;
+        background: var(--card-bg);
+      }
+
+      @keyframes modalSlideUp {
+        from {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .modal-header {
+        border-bottom: 1px solid var(--border-color);
+        padding: 20px 24px;
+        background: linear-gradient(
+          135deg,
+          var(--card-bg) 0%,
+          var(--card-bg) 100%
+        );
+      }
+
+      .modal-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .modal-body {
+        padding: 24px;
+      }
+
+      .form-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+        transition: color 0.3s ease;
+      }
+
+      .form-control:focus + .form-label {
+        color: #3498db;
+      }
+
+      .form-control {
+        padding: 10px 14px;
+        border: 1px solid var(--input-border);
+        border-radius: 8px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        background: var(--card-bg);
+        color: var(--text-primary);
+      }
+
+      .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        transform: translateY(-2px);
+      }
+
+      /* Alert/Toast */
+      .toast-container {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        z-index: 9999;
+      }
+
+      .custom-toast {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        padding: 16px 20px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 300px;
+        animation: slideIn 0.3s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      .toast-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .toast-success .toast-icon {
+        background: #d4f1e3;
+        color: #27ae60;
+      }
+
+      .toast-error .toast-icon {
+        background: #fee;
+        color: #e74c3c;
+      }
+
+      /* Calendar View */
+      .calendar-container {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+
+      .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .calendar-month {
+        font-size: 20px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .calendar-nav {
+        display: flex;
+        gap: 8px;
+      }
+
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+      }
+
+      .calendar-day {
+        aspect-ratio: 1;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+
+      .calendar-day:hover {
+        background: #e8f4f8;
+      }
+
+      .calendar-day.has-birthday {
+        background: #e8f4f8;
+        color: #3498db;
+        font-weight: 600;
+      }
+
+      .calendar-day.today {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .main-container {
+          padding: 16px 12px;
+        }
+
+        .page-header h1 {
+          font-size: 24px;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+        }
+
+        .stat-card {
+          padding: 16px;
+        }
+
+        .stat-card-value {
+          font-size: 24px;
+        }
+
+        .action-bar {
+          flex-direction: column;
+        }
+
+        .btn-custom {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .search-filter-bar {
+          flex-direction: column;
+        }
+
+        .search-input {
+          width: 100%;
+        }
+
+        .birthday-card {
+          grid-template-columns: auto 1fr;
+          gap: 12px;
+        }
+
+        .birthday-actions {
+          grid-column: 1 / -1;
+          justify-content: flex-end;
+          margin-top: 8px;
+        }
+
+        .toast-container {
+          right: 12px;
+          left: 12px;
+        }
+
+        .custom-toast {
+          min-width: auto;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .calendar-grid {
+          gap: 4px;
+        }
+
+        .calendar-day {
+          font-size: 12px;
+        }
+      }
+
+      /* Loading State */
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #7f8c8d;
+      }
+
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #f0f3f7;
+        border-top-color: #3498db;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 16px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Empty State */
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+      }
+
+      .empty-state-icon {
+        font-size: 64px;
+        color: #dfe6e9;
+        margin-bottom: 16px;
+      }
+
+      .empty-state h3 {
+        font-size: 20px;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+      }
+
+      .empty-state p {
+        color: var(--text-secondary);
+        margin-bottom: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Animated Background Particles -->
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <i class="bi bi-calendar-heart"></i> Birthday Reminder
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="#"
+                ><i class="bi bi-house"></i> Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"
+                ><i class="bi bi-person-circle"></i> {{ session.get('username',
+                'User') }}</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout"
+                ><i class="bi bi-box-arrow-right"></i> Logout</a
+              >
+            </li>
+            <li class="nav-item">
+              <button
+                class="theme-toggle"
+                onclick="toggleTheme()"
+                title="Toggle Dark Mode"
+              >
+                <i class="bi bi-moon-stars-fill" id="theme-icon"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1>Birthday Management</h1>
+        <p>Keep track of important dates and never miss a birthday</p>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <i class="bi bi-calendar-check stat-card-icon"></i>
+          <div class="stat-card-title">Total Birthdays</div>
+          <div class="stat-card-value" id="totalCount">0</div>
+        </div>
+        <div class="stat-card">
+          <i class="bi bi-calendar-event stat-card-icon"></i>
+          <div class="stat-card-title">This Month</div>
+          <div class="stat-card-value" id="monthCount">0</div>
+        </div>
+        <div class="stat-card">
+          <i class="bi bi-cake2 stat-card-icon"></i>
+          <div class="stat-card-title">Today</div>
+          <div class="stat-card-value" id="todayCount">0</div>
+        </div>
+        <div class="stat-card">
+          <i class="bi bi-clock-history stat-card-icon"></i>
+          <div class="stat-card-title">Next 7 Days</div>
+          <div class="stat-card-value" id="weekCount">0</div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-bar">
+        <button class="btn-custom btn-primary-custom" onclick="openAddModal()">
+          <i class="bi bi-plus-circle"></i> Add Birthday
+        </button>
+        <button
+          class="btn-custom btn-success-custom"
+          onclick="sendBulkWhatsAppMessages()"
+        >
+          <i class="bi bi-whatsapp"></i> Send Wishes
+        </button>
+        <button class="btn-custom btn-outline-custom" onclick="exportData()">
+          <i class="bi bi-download"></i> Export
+        </button>
+      </div>
+
+      <!-- Search and Filter Bar -->
+      <div class="search-filter-bar">
+        <input
+          type="text"
+          class="search-input"
+          id="searchInput"
+          placeholder="Search birthdays..."
+        />
+        <div class="view-toggle">
+          <button
+            class="view-btn active"
+            onclick="switchView('table')"
+            id="tableViewBtn"
+          >
+            <i class="bi bi-list-ul"></i> List
+          </button>
+          <button
+            class="view-btn"
+            onclick="switchView('calendar')"
+            id="calendarViewBtn"
+          >
+            <i class="bi bi-calendar3"></i> Calendar
+          </button>
+        </div>
+      </div>
+
+      <!-- Birthdays Container -->
+      <div id="tableView" class="birthdays-container">
+        <div class="loading" id="loadingState">
+          <div class="spinner"></div>
+          <p>Loading birthdays...</p>
+        </div>
+        <div id="birthdaysList" style="display: none"></div>
+        <div class="empty-state" id="emptyState" style="display: none">
+          <div class="empty-state-icon"><i class="bi bi-calendar-x"></i></div>
+          <h3>No birthdays yet</h3>
+          <p>Add your first birthday to get started</p>
+          <button
+            class="btn-custom btn-primary-custom"
+            onclick="openAddModal()"
+          >
+            <i class="bi bi-plus-circle"></i> Add Birthday
+          </button>
+        </div>
+      </div>
+
+      <!-- Calendar View -->
+      <div id="calendarView" class="calendar-container" style="display: none">
+        <div class="calendar-header">
+          <h2 class="calendar-month" id="calendarMonth">Loading...</h2>
+          <div class="calendar-nav">
+            <button
+              class="btn-custom btn-outline-custom"
+              onclick="previousMonth()"
+            >
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <button class="btn-custom btn-outline-custom" onclick="nextMonth()">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <div id="birthdayDetails" style="margin-top: 20px; display: none"></div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Add/Edit Birthday Modal -->
+    <div class="modal fade" id="birthdayModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Add Birthday</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="birthdayForm">
+              <input type="hidden" id="birthdayId" />
+              <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" required />
+              </div>
+              <div class="mb-3">
+                <label for="birthDate" class="form-label">Birth Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="birthDate"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email (Optional)</label>
+                <input type="email" class="form-control" id="email" />
+              </div>
+              <div class="mb-3">
+                <label for="phone" class="form-label">Phone (Optional)</label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="phone"
+                  placeholder="+1234567890"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn-custom btn-outline-custom"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn-custom btn-primary-custom"
+              onclick="saveBirthday()"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WhatsApp Modal -->
+    <div class="modal fade" id="whatsappModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Send WhatsApp Message</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="whatsappBirthdayId" />
+            <input type="hidden" id="whatsappPhone" />
+            <div class="mb-3">
+              <label class="form-label"><strong>To:</strong></label>
+              <p id="whatsappRecipient" class="text-muted"></p>
+            </div>
+            <div class="mb-3">
+              <label for="whatsappMessage" class="form-label">Message:</label>
+              <textarea
+                class="form-control"
+                id="whatsappMessage"
+                rows="6"
+              ></textarea>
+              <small class="text-muted"
+                >Default message will be used if left empty</small
+              >
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn-custom btn-outline-custom"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn-custom btn-success-custom"
+              onclick="sendWhatsAppMessage()"
+            >
+              <i class="bi bi-whatsapp"></i> Send
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+      // Theme Toggle Function
+      function toggleTheme() {
+        const body = document.body;
+        const themeIcon = document.getElementById("theme-icon");
+
+        body.classList.toggle("dark-mode");
+
+        // Update icon
+        if (body.classList.contains("dark-mode")) {
+          themeIcon.classList.remove("bi-moon-stars-fill");
+          themeIcon.classList.add("bi-sun-fill");
+          localStorage.setItem("theme", "dark");
+        } else {
+          themeIcon.classList.remove("bi-sun-fill");
+          themeIcon.classList.add("bi-moon-stars-fill");
+          localStorage.setItem("theme", "light");
+        }
+      }
+
+      // Load saved theme on page load
+      window.addEventListener("DOMContentLoaded", function () {
+        const savedTheme = localStorage.getItem("theme");
+        const themeIcon = document.getElementById("theme-icon");
+
+        if (savedTheme === "dark") {
+          document.body.classList.add("dark-mode");
+          themeIcon.classList.remove("bi-moon-stars-fill");
+          themeIcon.classList.add("bi-sun-fill");
+        }
+      });
+    </script>
+  </body>
+</html>

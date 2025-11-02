@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Birthday Reminder</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg-color: #f0f2f5;
+        --text-primary: #1c1e21;
+        --text-secondary: #606770;
+        --brand-color: #1c3f94;
+        --card-bg: white;
+        --input-bg: #f0f2f5;
+        --input-border: #dddfe2;
+        --shadow: rgba(0, 0, 0, 0.1);
+      }
+
+      body.dark-mode {
+        --bg-color: #18191a;
+        --text-primary: #e4e6eb;
+        --text-secondary: #b0b3b8;
+        --brand-color: #667eea;
+        --card-bg: #242526;
+        --input-bg: #3a3b3c;
+        --input-border: #3a3b3c;
+        --shadow: rgba(0, 0, 0, 0.3);
+      }
+
+      body {
+        background: var(--bg-color);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        transition: background 0.3s ease;
+      }
+
+      .container-fluid {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .login-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+
+      .brand-section h1 {
+        font-size: 56px;
+        color: var(--brand-color);
+        font-weight: 700;
+        margin-bottom: 16px;
+        letter-spacing: -1px;
+        transition: color 0.3s ease;
+      }
+
+      .brand-section p {
+        font-size: 26px;
+        color: var(--text-secondary);
+        line-height: 32px;
+        font-weight: 400;
+        transition: color 0.3s ease;
+      }
+
+      .login-box {
+        background: var(--card-bg);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px var(--shadow), 0 8px 16px var(--shadow);
+        padding: 24px;
+        max-width: 396px;
+        margin-left: auto;
+        transition: all 0.3s ease;
+      }
+
+      .form-control {
+        font-size: 17px;
+        padding: 14px 16px;
+        border: 1px solid var(--input-border);
+        border-radius: 6px;
+        line-height: 16px;
+        width: 100%;
+        margin-bottom: 12px;
+        background: var(--input-bg);
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus {
+        border-color: var(--brand-color);
+        outline: none;
+        box-shadow: none;
+      }
+
+      .form-control::placeholder {
+        color: var(--text-secondary);
+        opacity: 0.7;
+      }
+
+      .btn-login {
+        background: var(--brand-color);
+        border: none;
+        border-radius: 6px;
+        font-size: 20px;
+        line-height: 48px;
+        padding: 0 16px;
+        width: 100%;
+        font-weight: 600;
+        color: white;
+        cursor: pointer;
+        margin-top: 12px;
+        transition: all 0.3s ease;
+      }
+
+      .btn-login:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+      }
+
+      .forgot-password {
+        text-align: center;
+        margin: 16px 0;
+      }
+
+      .forgot-password a {
+        color: var(--brand-color);
+        font-size: 14px;
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .forgot-password a:hover {
+        text-decoration: underline;
+        opacity: 0.8;
+      }
+
+      .divider {
+        border-top: 1px solid var(--input-border);
+        margin: 20px 0;
+        transition: border-color 0.3s ease;
+      }
+
+      .signup-section {
+        text-align: center;
+        padding-top: 16px;
+      }
+
+      .btn-signup {
+        background: linear-gradient(135deg, #36a420 0%, #2d8a1a 100%);
+        border: none;
+        border-radius: 6px;
+        font-size: 17px;
+        line-height: 48px;
+        padding: 0 16px;
+        color: white;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-signup:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(54, 164, 32, 0.3);
+        color: white;
+        text-decoration: none;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        background: var(--card-bg);
+        border: 2px solid var(--input-border);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px var(--shadow);
+        z-index: 1000;
+      }
+
+      .theme-toggle:hover {
+        transform: rotate(180deg) scale(1.1);
+      }
+
+      .theme-toggle i {
+        font-size: 24px;
+        color: var(--brand-color);
+      }
+
+      .alert {
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        font-size: 15px;
+      }
+
+      .alert-danger {
+        background: #ffebe8;
+        border: 1px solid #dd3c10;
+        color: #dd3c10;
+      }
+
+      .alert-success {
+        background: #d4edda;
+        border: 1px solid #28a745;
+        color: #155724;
+      }
+
+      .btn-close {
+        background: transparent;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        float: right;
+        line-height: 1;
+        color: inherit;
+      }
+
+      @media (max-width: 992px) {
+        .login-wrapper {
+          grid-template-columns: 1fr;
+          gap: 30px;
+          text-align: center;
+        }
+
+        .brand-section h1 {
+          font-size: 40px;
+        }
+
+        .brand-section p {
+          font-size: 22px;
+        }
+
+        .login-box {
+          margin: 0 auto;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .brand-section h1 {
+          font-size: 32px;
+        }
+
+        .brand-section p {
+          font-size: 18px;
+        }
+
+        body {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Theme Toggle Button -->
+    <div class="theme-toggle" onclick="toggleTheme()">
+      <i class="bi bi-moon-stars" id="themeIcon"></i>
+    </div>
+
+    <div class="container-fluid">
+      <div class="login-wrapper">
+        <div class="brand-section">
+          <h1>Birthday Reminder</h1>
+          <p>
+            Birthday Reminder helps you connect and share with the people in
+            your life.
+          </p>
+        </div>
+
+        <div class="login-box">
+          <div id="alertContainer"></div>
+
+          <form id="loginForm">
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              placeholder="Email or username"
+              required
+            />
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              placeholder="Password"
+              required
+            />
+            <button type="submit" class="btn-login">Log In</button>
+          </form>
+
+          <div class="forgot-password">
+            <a href="#">Forgot password?</a>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="signup-section">
+            <a href="/signup" class="btn-signup">Create new account</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // Theme toggle functionality
+      function toggleTheme() {
+        const body = document.body;
+        const themeIcon = document.getElementById("themeIcon");
+
+        body.classList.toggle("dark-mode");
+
+        if (body.classList.contains("dark-mode")) {
+          themeIcon.classList.remove("bi-moon-stars");
+          themeIcon.classList.add("bi-sun");
+          localStorage.setItem("theme", "dark");
+        } else {
+          themeIcon.classList.remove("bi-sun");
+          themeIcon.classList.add("bi-moon-stars");
+          localStorage.setItem("theme", "light");
+        }
+      }
+
+      // Load saved theme on page load
+      window.addEventListener("DOMContentLoaded", () => {
+        const savedTheme = localStorage.getItem("theme");
+        const themeIcon = document.getElementById("themeIcon");
+
+        if (savedTheme === "dark") {
+          document.body.classList.add("dark-mode");
+          themeIcon.classList.remove("bi-moon-stars");
+          themeIcon.classList.add("bi-sun");
+        }
+      });
+
+      function showAlert(message, type = "danger") {
+        const alertContainer = document.getElementById("alertContainer");
+        const alert = document.createElement("div");
+        alert.className = `alert alert-${type}`;
+        alert.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" onclick="this.parentElement.remove()">×</button>
+            `;
+        alertContainer.innerHTML = "";
+        alertContainer.appendChild(alert);
+
+        setTimeout(() => {
+          alert.remove();
+        }, 5000);
+      }
+
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+
+          try {
+            const response = await fetch("/api/login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ username, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              showAlert("Login successful! Redirecting...", "success");
+              setTimeout(() => {
+                window.location.href = "/";
+              }, 1000);
+            } else {
+              showAlert(
+                data.error || "Login failed. Please try again.",
+                "danger"
+              );
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            showAlert("An error occurred. Please try again.", "danger");
+          }
+        });
+    </script>
+  </body>
+</html>
